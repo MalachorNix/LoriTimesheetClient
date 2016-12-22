@@ -12,4 +12,5 @@
     <string name="menu_log_out">Log out</string>
     <string name="menu_change_week">Change week</string>
     <string name="remove_time_entry">Remove entry</string>
+    <string name="edit_time_entry">Edit Entry</string>
 </resources>

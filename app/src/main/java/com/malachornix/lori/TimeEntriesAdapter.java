@@ -52,8 +52,7 @@ public class TimeEntriesAdapter extends RecyclerView.Adapter<TimeEntriesAdapter.
     @Override
     public TimeEntriesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View viewItem = LayoutInflater.from(parent.getContext()).inflate(R.layout.time_entries_layout, parent, false);
-        TimeEntriesViewHolder timeEntriesViewHolder = new TimeEntriesViewHolder(viewItem);
-        return timeEntriesViewHolder;
+        return new TimeEntriesViewHolder(viewItem);
     }
 
     @Override
@@ -132,6 +131,8 @@ public class TimeEntriesAdapter extends RecyclerView.Adapter<TimeEntriesAdapter.
         TextView taskName;
         @BindView(R.id.time_entry_time)
         TextView time;
+        @BindView(R.id.time_entry_edit_button)
+        Button editButton;
         @BindView(R.id.time_entry_remove_button)
         Button removeButton;
 
