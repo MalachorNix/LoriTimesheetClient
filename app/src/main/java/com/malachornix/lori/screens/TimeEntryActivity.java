@@ -372,7 +372,15 @@ public class TimeEntryActivity extends AppCompatActivity {
 
         @Override
         public void onTimeSet(TimePickerDialog view, int hourOfDay, int minute, int second) {
-            time = hourOfDay + ":" + minute;
+            String strHour = String.valueOf(hourOfDay);
+            String strMinute = String.valueOf(minute);
+            if (hourOfDay < 10) {
+                strHour = "0" + strHour;
+            }
+            if (minute < 10) {
+                strMinute = "0" + strMinute;
+            }
+            time = strHour + ":" + strMinute;
         }
     }
 
