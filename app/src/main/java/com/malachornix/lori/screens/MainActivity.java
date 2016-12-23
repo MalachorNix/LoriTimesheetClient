@@ -158,6 +158,10 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
                 return true;
+            case R.id.menu_add:
+                Intent intent = new Intent(this, TimeEntryActivity.class);
+                startActivity(intent);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

@@ -20,4 +20,5 @@
     <string name="time_entry_time">Time</string>
     <string name="time_entry_date_button">Choose date</string>
     <string name="time_entry_time_button">Choose time</string>
+    <string name="menu_add_time_entry">Add Time Entry</string>
 </resources>

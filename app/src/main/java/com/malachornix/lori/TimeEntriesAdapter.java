@@ -67,13 +67,6 @@ public class TimeEntriesAdapter extends RecyclerView.Adapter<TimeEntriesAdapter.
                 removeTimeEntry(position);
             }
         });
-        holder.editButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(), TimeEntryActivity.class);
-                view.getContext().startActivity(intent);
-            }
-        });
     }
 
     private void removeTimeEntry(final int position) {
@@ -139,8 +132,6 @@ public class TimeEntriesAdapter extends RecyclerView.Adapter<TimeEntriesAdapter.
         TextView taskName;
         @BindView(R.id.time_entry_time)
         TextView time;
-        @BindView(R.id.time_entry_edit_button)
-        Button editButton;
         @BindView(R.id.time_entry_remove_button)
         Button removeButton;
 

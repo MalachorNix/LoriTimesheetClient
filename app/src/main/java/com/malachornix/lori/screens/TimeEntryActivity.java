@@ -14,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -111,8 +112,10 @@ public class TimeEntryActivity extends AppCompatActivity {
                     @Override
                     public void onDismiss(DialogInterface dialogInterface) {
                         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                        strDate = sdf.format(date.getTime());
-                        dateText.setText(strDate);
+                        if (date != null) {
+                            strDate = sdf.format(date.getTime());
+                            dateText.setText(strDate);
+                        }
                     }
                 });
             }
@@ -145,14 +148,22 @@ public class TimeEntryActivity extends AppCompatActivity {
                     timeFormat.parse(strTime);
                     saveTimeEntry();
                 } catch (ParseException e) {
+                    showDateTimeParseError();
                     e.printStackTrace();
                     Log.d(TIME_ENTRY_TAG, "Date or time is not valid. Date: " + strDate + " Time: " + strTime);
                 }
             }
+
+
         });
 
         fillSpinners();
     }
+
+    private void showDateTimeParseError() {
+        Toast.makeText(this, "Date or time are not valid", Toast.LENGTH_SHORT).show();
+    }
+
 
     private void setUserId() {
         String sessionId = preferences.getString("SessionId", "");
