@@ -13,4 +13,11 @@
     <string name="menu_change_week">Change week</string>
     <string name="remove_time_entry">Remove entry</string>
     <string name="edit_time_entry">Edit Entry</string>
+    <string name="spinner_project">Choose project</string>
+    <string name="spinner_project_tasks">Choose tasks</string>
+    <string name="save_time_entry">SAVE</string>
+    <string name="time_entry_date">Date</string>
+    <string name="time_entry_time">Time</string>
+    <string name="time_entry_date_button">Choose date</string>
+    <string name="time_entry_time_button">Choose time</string>
 </resources>

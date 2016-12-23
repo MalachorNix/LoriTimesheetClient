@@ -13,12 +13,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.malachornix.lori.R;
 import com.malachornix.lori.TimeEntriesAdapter;
-import com.malachornix.lori.interfaces.LoriApi;
+import com.malachornix.lori.api.LoriApi;
 import com.malachornix.lori.model.TimeEntry;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
@@ -41,10 +40,8 @@ public class MainActivity extends AppCompatActivity {
     private SharedPreferences preferences;
     private static String fromDate;
     private static String tillDate;
-    private TextView textView;
 
     private RecyclerView recyclerView;
-    private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
 
 
@@ -149,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
                 logout();
                 return true;
             case R.id.menu_calendar:
-                Calendar calendar = Calendar.getInstance(Locale.FRANCE);
+                Calendar calendar = Calendar.getInstance();
                 DatePickerDialog dpd = DatePickerDialog.newInstance(new WeekPickerFragment(), calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
                         calendar.get(Calendar.DAY_OF_MONTH));
                 dpd.setVersion(DatePickerDialog.Version.VERSION_2);

@@ -14,7 +14,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.malachornix.lori.R;
-import com.malachornix.lori.interfaces.LoriApi;
+import com.malachornix.lori.api.LoriApi;
 
 import retrofit2.Call;
 import retrofit2.Callback;

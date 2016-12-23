@@ -1,6 +1,7 @@
 package com.malachornix.lori;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -10,10 +11,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.malachornix.lori.interfaces.LoriApi;
+import com.malachornix.lori.api.LoriApi;
 import com.malachornix.lori.model.TimeEntry;
+import com.malachornix.lori.screens.TimeEntryActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -66,6 +67,13 @@ public class TimeEntriesAdapter extends RecyclerView.Adapter<TimeEntriesAdapter.
                 removeTimeEntry(position);
             }
         });
+        holder.editButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(), TimeEntryActivity.class);
+                view.getContext().startActivity(intent);
+            }
+        });
     }
 
     private void removeTimeEntry(final int position) {
@@ -96,7 +104,7 @@ public class TimeEntriesAdapter extends RecyclerView.Adapter<TimeEntriesAdapter.
             Log.d(TIME_ENTRIES_ADAPTER, e.getMessage());
         }
 
-        Call<String> removeCall = loriApi.removeTimeEntry(sessionId, mainObject.toString());
+        Call<String> removeCall = loriApi.commitEntity(sessionId, mainObject.toString());
         removeCall.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
