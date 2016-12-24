@@ -8,6 +8,9 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -384,5 +387,52 @@ public class TimeEntryActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.time_entry_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.time_entry_menu_logout:
+                logout();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void logout() {
+        String sessionId = preferences.getString("SessionId", "");
+        String username = preferences.getString("Username", "");
+
+        Log.d(TIME_ENTRY_TAG, "Session id from LoginActivity is: " + sessionId);
+        Log.d(TIME_ENTRY_TAG, "Username from LoginActivity is: " + username);
+
+        Call<String> logoutCall = loriApi.logout(sessionId);
+
+        logoutCall.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                int statusCode = response.code();
+
+                Log.d(TIME_ENTRY_TAG, "Response code is: " + statusCode);
+
+                Intent intent = new Intent(TimeEntryActivity.this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                Log.d(TIME_ENTRY_TAG, t.toString());
+                Toast toast = Toast.makeText(TimeEntryActivity.this, "Something went wrong", Toast.LENGTH_SHORT);
+                toast.show();
+            }
+        });
+    }
 
 }

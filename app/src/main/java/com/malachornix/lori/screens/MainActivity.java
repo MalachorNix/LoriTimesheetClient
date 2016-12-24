@@ -16,7 +16,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.malachornix.lori.R;
-import com.malachornix.lori.TimeEntriesAdapter;
+import com.malachornix.lori.adapter.TimeEntriesAdapter;
 import com.malachornix.lori.api.LoriApi;
 import com.malachornix.lori.model.TimeEntry;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
@@ -171,6 +171,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.menu_add:
                 Intent intent = new Intent(this, TimeEntryActivity.class);
                 startActivity(intent);
+                finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
