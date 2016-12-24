@@ -10,6 +10,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -27,66 +28,88 @@ public class LoginActivity extends AppCompatActivity {
 
     private LoriApi loriApi;
     private static final String LOGIN_TAG = "LOGIN";
+    private SharedPreferences preferences;
+    private EditText loginText;
+    private EditText passwordText;
+    private CheckBox rememberMeCheckBox;
+    private Button loginButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        final EditText loginText = (EditText) findViewById(R.id.input_login);
-        final EditText passwordText = (EditText) findViewById(R.id.input_password);
+        loginText = (EditText) findViewById(R.id.input_login);
+        passwordText = (EditText) findViewById(R.id.input_password);
+        rememberMeCheckBox = (CheckBox) findViewById(R.id.checkBox);
 
-        Button loginButton = (Button) findViewById(R.id.btn_login);
+        preferences = getSharedPreferences("LoriApp", MODE_PRIVATE);
+
+        loginButton = (Button) findViewById(R.id.btn_login);
+
+        boolean rememberMe = preferences.getBoolean("RememberMe", false);
+
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final SharedPreferences preferences
-                        = getSharedPreferences("LoriApp", MODE_PRIVATE);
+                login();
+            }
+        });
 
-                String baseUrl =
-                        preferences.getString("BaseUrl", getResources().getString(R.string.apiUrl));
+        if (rememberMe) {
+            String username = preferences.getString("Username", "");
+            String password = preferences.getString("Password", "");
+            loginText.setText(username);
+            passwordText.setText(password);
+            login();
+        }
+    }
 
-                Retrofit retrofit = new Retrofit.Builder()
-                        .baseUrl(baseUrl)
-                        .addConverterFactory(ScalarsConverterFactory.create())
-                        .addConverterFactory(GsonConverterFactory.create())
-                        .build();
+    private void login() {
+        String baseUrl =
+                preferences.getString("BaseUrl", getResources().getString(R.string.apiUrl));
 
-                loriApi = retrofit.create(LoriApi.class);
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(baseUrl)
+                .addConverterFactory(ScalarsConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
 
-                final String username = loginText.getText().toString();
-                String password = passwordText.getText().toString();
-                Call<String> loginCall = loriApi.login(username, password);
+        loriApi = retrofit.create(LoriApi.class);
 
-                loginCall.enqueue(new Callback<String>() {
-                    @Override
-                    public void onResponse(Call<String> call, Response<String> response) {
-                        int statusCode = response.code();
-                        String sessionId = response.body();
+        final String username = loginText.getText().toString();
+        final String password = passwordText.getText().toString();
+        Call<String> loginCall = loriApi.login(username, password);
 
-                        if (isOkStatus(statusCode) && sessionId != null) {
+        loginCall.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                int statusCode = response.code();
+                String sessionId = response.body();
 
-                            Log.d(LOGIN_TAG, "Session id is: " + sessionId);
+                if (isOkStatus(statusCode) && sessionId != null) {
 
-                            preferences.edit().putString("SessionId", sessionId).apply();
-                            preferences.edit().putString("Username", username).apply();
+                    Log.d(LOGIN_TAG, "Session id is: " + sessionId);
 
-                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                            startActivity(intent);
-                            finish();
-                        } else {
-                            Toast toast = Toast.makeText(LoginActivity.this, "Incorrect login or password", Toast.LENGTH_SHORT);
-                            toast.show();
-                        }
-                    }
+                    preferences.edit().putString("SessionId", sessionId).apply();
+                    preferences.edit().putString("Username", username).apply();
+                    preferences.edit().putString("Password", password).apply();
+                    preferences.edit().putBoolean("RememberMe", rememberMeCheckBox.isChecked()).apply();
 
-                    @Override
-                    public void onFailure(Call<String> call, Throwable t) {
-                        Log.d(LOGIN_TAG, t.toString());
-                        Toast toast = Toast.makeText(LoginActivity.this, "Something went wrong", Toast.LENGTH_SHORT);
-                        toast.show();
-                    }
-                });
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    Toast toast = Toast.makeText(LoginActivity.this, "Incorrect login or password", Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                Log.d(LOGIN_TAG, t.toString());
+                Toast toast = Toast.makeText(LoginActivity.this, "Something went wrong", Toast.LENGTH_SHORT);
+                toast.show();
             }
         });
     }

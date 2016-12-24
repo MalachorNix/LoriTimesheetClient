@@ -408,6 +408,7 @@ public class TimeEntryActivity extends AppCompatActivity {
     private void logout() {
         String sessionId = preferences.getString("SessionId", "");
         String username = preferences.getString("Username", "");
+        preferences.edit().putBoolean("RememberMe", false).apply();
 
         Log.d(TIME_ENTRY_TAG, "Session id from LoginActivity is: " + sessionId);
         Log.d(TIME_ENTRY_TAG, "Username from LoginActivity is: " + username);

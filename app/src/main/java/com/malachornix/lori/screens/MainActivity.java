@@ -112,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
     private void logout() {
         String sessionId = preferences.getString("SessionId", "");
         String username = preferences.getString("Username", "");
+        preferences.edit().putBoolean("RememberMe", false).apply();
 
         Log.d(MAIN_TAG, "Session id from LoginActivity is: " + sessionId);
         Log.d(MAIN_TAG, "Username from LoginActivity is: " + username);
