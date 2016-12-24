@@ -23,8 +23,9 @@ import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -43,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
-
+    private static Calendar selectedDate;
 
 
     @Override
@@ -87,6 +88,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<List<TimeEntry>> call, Response<List<TimeEntry>> response) {
                 List<TimeEntry> timeEntries = response.body();
+                Collections.sort(timeEntries, new Comparator<TimeEntry>() {
+                    @Override
+                    public int compare(TimeEntry timeEntry, TimeEntry t1) {
+                        return timeEntry.getDate().compareTo(t1.getDate());
+                    }
+                });
                 TimeEntriesAdapter adapter = new TimeEntriesAdapter(timeEntries, getApplicationContext());
 
                 recyclerView.setAdapter(adapter);
@@ -146,7 +153,10 @@ public class MainActivity extends AppCompatActivity {
                 logout();
                 return true;
             case R.id.menu_calendar:
-                Calendar calendar = Calendar.getInstance();
+                Calendar calendar = selectedDate;
+                if (calendar == null) {
+                    calendar = Calendar.getInstance();
+                }
                 DatePickerDialog dpd = DatePickerDialog.newInstance(new WeekPickerFragment(), calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
                         calendar.get(Calendar.DAY_OF_MONTH));
                 dpd.setVersion(DatePickerDialog.Version.VERSION_2);
@@ -183,9 +193,21 @@ public class MainActivity extends AppCompatActivity {
             calendar.add(Calendar.DATE, 6);
             tillDate = sdf.format(calendar.getTime());
             Log.d(MAIN_TAG, fromDate + " " + tillDate);
+            selectedDate = Calendar.getInstance();
+            selectedDate.set(year, monthOfYear, dayOfMonth);
 
         }
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("SelectedDate", selectedDate);
+    }
 
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        selectedDate = (Calendar) savedInstanceState.getSerializable("SelectedDate");
+    }
 }

@@ -19,6 +19,7 @@ import com.malachornix.lori.screens.TimeEntryActivity;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -58,15 +59,39 @@ public class TimeEntriesAdapter extends RecyclerView.Adapter<TimeEntriesAdapter.
 
     @Override
     public void onBindViewHolder(TimeEntriesViewHolder holder, final int position) {
-        holder.date.setText(timeEntries.get(position).getDate());
-        holder.taskName.setText(timeEntries.get(position).getTaskName());
-        holder.time.setText(timeEntries.get(position).getTimeInMinutes());
+        TimeEntry timeEntry = timeEntries.get(position);
+        holder.date.setText(context.getResources().getString(R.string.date) + " " + timeEntry.getDate());
+        holder.projectName.setText(context.getResources().getString(R.string.project) + " " + timeEntry.getTask().getProject().getName());
+        holder.taskName.setText(context.getResources().getString(R.string.task) + " " + timeEntry.getTaskName());
+        String timeInMinutes = timeEntry.getTimeInMinutes();
+        String time = formatTime(timeInMinutes);
+        holder.time.setText(context.getResources().getString(R.string.time) + " " + time);
         holder.removeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 removeTimeEntry(position);
             }
         });
+    }
+
+    private String formatTime(String timeInMinutes) {
+        int time = Integer.parseInt(timeInMinutes);
+
+        int hour = (int) Math.floor(time / 60);
+        int minute = time % 60;
+
+        String strHour = String.valueOf(hour);
+        String strMinute = String.valueOf(minute);
+
+        if (hour < 10) {
+            strHour = "0" + strHour;
+        }
+
+        if (minute < 10) {
+            strMinute = "0" + strMinute;
+        }
+
+        return strHour + ":" + strMinute;
     }
 
     private void removeTimeEntry(final int position) {
@@ -113,8 +138,6 @@ public class TimeEntriesAdapter extends RecyclerView.Adapter<TimeEntriesAdapter.
             }
         });
 
-
-
     }
 
     @Override
@@ -128,6 +151,8 @@ public class TimeEntriesAdapter extends RecyclerView.Adapter<TimeEntriesAdapter.
         CardView cardViewTimeEntries;
         @BindView(R.id.time_entry_date)
         TextView date;
+        @BindView(R.id.time_entry_project_name)
+        TextView projectName;
         @BindView(R.id.time_entry_task_name)
         TextView taskName;
         @BindView(R.id.time_entry_time)

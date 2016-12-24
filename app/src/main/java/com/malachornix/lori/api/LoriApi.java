@@ -28,7 +28,7 @@ public interface LoriApi {
     @GET("query.json?e=sec$User&q=select+te+from+sec$User+te+where+te.login=:login")
     Call<List<User>> getUserByLogin(@Query("s") String sessionId, @Query("login") String login);
 
-    @GET("query.json?e=ts$TimeEntry&q=select+te+from+ts$TimeEntry+te+where+te.createdBy=:name+and+te.date+between+:from+and+:to")
+    @GET("query.json?e=ts$TimeEntry&q=select+te+from+ts$TimeEntry+te+where+te.createdBy=:name+and+te.date+between+:from+and+:to&view=timeEntry-browse")
     Call<List<TimeEntry>> getTimeEntries(@Query("s") String sessionId,
                                          @Query("name") String username,
                                          @Query("from") String fromDate,

@@ -13,6 +13,9 @@ public class TimeEntry implements Serializable, Parcelable {
     @SerializedName("id")
     @Expose
     private String id;
+    @SerializedName("task")
+    @Expose
+    private Task task;
     @SerializedName("createTs")
     @Expose
     private String createTs;
@@ -76,6 +79,7 @@ public class TimeEntry implements Serializable, Parcelable {
             instance.timeInMinutes = ((String) in.readValue((String.class.getClassLoader())));
             instance.updateTs = ((String) in.readValue((String.class.getClassLoader())));
             instance.updatedBy = ((Object) in.readValue((Object.class.getClassLoader())));
+            instance.task = (Task) in.readValue(Task.class.getClassLoader());
             return instance;
         }
 
@@ -238,4 +242,11 @@ public class TimeEntry implements Serializable, Parcelable {
                 '}';
     }
 
+    public Task getTask() {
+        return task;
+    }
+
+    public void setTask(Task task) {
+        this.task = task;
+    }
 }
